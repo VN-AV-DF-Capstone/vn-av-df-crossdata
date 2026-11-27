@@ -14,7 +14,7 @@ git remote add origin https://github.com/<org-hoặc-user>/vn-av-df-crossdata.gi
 git push -u origin main
 ```
 
-Repo để public: notebook clone từ `CROSS_URL = "https://github.com/linhxm/vn-av-df-crossdata.git"`. Đặt tên hoặc tài khoản khác thì sửa dòng này trong `tools/make_notebook.py` rồi chạy lại `python tools/make_notebook.py`. Clone lỗi thì notebook dùng dataset `linhxm/vn-av-df-crossdata-code` (nếu có attach).
+Repo để public: notebook clone từ `CROSS_URL = "https://github.com/VN-AV-DF-Capstone/vn-av-df-crossdata.git"`. Đặt tên hoặc tài khoản khác thì sửa dòng này trong `tools/make_notebook.py` rồi chạy lại `python tools/make_notebook.py`. Clone lỗi thì notebook dùng dataset `linhxm/vn-av-df-crossdata-code` (nếu có attach).
 
 ## 2. Dataset trên Kaggle (private)
 
@@ -34,28 +34,26 @@ cd kaggle_upload && kaggle datasets version -p vn-av-df-crossdata-code -m "updat
 # chạy từ trong kaggle_upload: CLI 2.2.4 lỗi với file .gitignore khi -p có dấu "/"
 ```
 
-## 3. Tạo notebook chạy thật (trên web Kaggle)
+## 3. Notebook trên Kaggle (đã tạo sẵn)
 
-1. Vào Kaggle, chọn Create → Notebook → File → Import notebook, rồi chọn `notebooks/crossdata.ipynb`.
-2. Trong Add Input, thêm:
-   - `linhxm/vn-av-df-crossdata-code`;
-   - `linhxm/vn-av-df-weights-2seeds`;
-   - tập ngoài của phiên đó (RUNBOOK_vi.md mục 0).
-3. Settings: bật Internet (để tải AV-HuBERT, XLS-R, checkpoint AVH-Align). Trong Add-ons → Secrets, bật `WANDB_API_KEY`.
-4. Sửa ở cell 2 các dòng: `DATASETS`, `ONLY`, `PER_STRATUM`, `SESSION`.
-5. Chạy theo thứ tự (mỗi lần dùng Save Version → Save & Run All):
+`tools/create_kaggle_notebooks.py` đã tạo 10 notebook private, mới chỉ lưu, chưa chạy:
+- input, accelerator, Internet và cell 2 đã điền sẵn;
+- code lấy bằng `git clone` từ GitHub, không cần dataset code.
 
-| Lần | SESSION | Accelerator | Input thêm |
+| Notebook | Accelerator | Input đã gắn | Cell 2 |
 |---|---|---|---|
-| 1 | `cpu` | None | |
-| 2 | `gpu` | GPU T4 ×2 | Output lần 1 (Add Input → Your Work → notebook đó); đặt `PREVIOUS_WORK = Path("/kaggle/input/notebooks/linhxm/<tên notebook lần 1>/crossdata")` |
-| 3 | `audit` | None | 3 dataset part VN-AV-DF |
+| `vn-av-df-crossdata-<tập>-cpu` (polyglotfake, fakeavceleb, lavdf, avdeepfake1m) | None | tập đó + `linhxm/vn-av-df-weights-2seeds` | `SESSION = "cpu"`, `ONLY = ["<tập>"]` |
+| `vn-av-df-crossdata-<tập>-gpu` | T4 ×2 | như trên + Output của notebook `-cpu` cùng tập | `SESSION = "gpu"`, `PREVIOUS_WORK` = Output đó |
+| `vn-av-df-crossdata-report` | None | Output của 4 notebook `-gpu` | `SESSION = "report"` (tập nào chưa chạy thì tự bỏ qua) |
+| `vn-av-df-crossdata-audit` | None | 3 part VN-AV-DF | `SESSION = "audit"` |
 
-Nên dùng mỗi lần một notebook riêng (vd. `vn-av-df-crossdata-cpu`, `-gpu`, `-audit`), để Output lần 1 còn nguyên khi chạy lần 2.
+Mỗi notebook làm như sau:
+1. Mở notebook → Add-ons → Secrets → bật `WANDB_API_KEY`. API không gắn secret được; thiếu secret thì notebook dừng ngay và báo rõ lý do.
+2. Save Version → Save & Run All.
+3. Thứ tự: 4 notebook `-cpu` (chạy song song được) → notebook `-gpu` của tập đã chạy xong `-cpu` → `report`.
+4. Trước khi chạy `-gpu`, kiểm ô Input: Output của notebook `-cpu` phải là version mới nhất. Nếu Kaggle hiện nút Update thì bấm.
 
-Kiểm quota GPU trước lần 2: 6 giờ mỗi tuần, reset 00:00 UTC thứ Bảy.
-- Chạy thử 24 video (`vn-av-df-crossdata-smoke`) đo được thời gian từng bước; xem log của notebook đó.
-- Có thể tạo notebook kiểu khác: `python tools/make_notebook.py --out <file> --set SESSION='"gpu"' --set ONLY='["fakeavceleb"]'`.
+Tạo lại notebook, hoặc tạo cho tài khoản khác: `python tools/create_kaggle_notebooks.py --owner <user>` (thêm `--dry-run` để xem trước).
 
 ## 4. Kết quả
 

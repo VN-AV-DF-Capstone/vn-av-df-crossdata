@@ -44,7 +44,7 @@ SESSION_START = time.time()
 MAIN_URL = "https://github.com/linhxm/vn-av-df-forensics.git"
 MAIN = Path("/kaggle/working/vn-av-df-forensics")
 # Repo này (public trên GitHub); clone lỗi thì dùng bản upload thành Kaggle dataset (nếu có attach).
-CROSS_URL = "https://github.com/linhxm/vn-av-df-crossdata.git"
+CROSS_URL = "https://github.com/VN-AV-DF-Capstone/vn-av-df-crossdata.git"
 CROSS_DATASET = Path("/kaggle/input/datasets/linhxm/vn-av-df-crossdata-code")
 CROSS = Path("/kaggle/working/vn-av-df-crossdata")
 WORKERS = Path("/kaggle/temp/vn-av-df-workers")
@@ -81,7 +81,11 @@ WANDB = """
 USE_WANDB = True   # secret WANDB_API_KEY (Add-ons → Secrets); project private, không đẩy ảnh / video người thật
 if USE_WANDB:
     from kaggle_secrets import UserSecretsClient
-    os.environ["WANDB_API_KEY"] = UserSecretsClient().get_secret("WANDB_API_KEY")
+    try:
+        os.environ["WANDB_API_KEY"] = UserSecretsClient().get_secret("WANDB_API_KEY")
+    except Exception as exc:
+        raise RuntimeError("Bật secret WANDB_API_KEY cho notebook này (Add-ons → Secrets), "
+                           "hoặc đặt USE_WANDB = False") from exc
     os.environ["WANDB_DIR"] = "/kaggle/temp"
 """
 
@@ -118,6 +122,9 @@ cross["models"]["runs"] = RUNS
 cross["wandb"] = {"mode": "online"} if USE_WANDB else None
 LIGHT = shutil.ignore_patterns("cache", "clips", "raw", "figures", "tables")
 for previous in map(Path, PREVIOUS_WORK if isinstance(PREVIOUS_WORK, (list, tuple)) else [PREVIOUS_WORK] if PREVIOUS_WORK else []):
+    if not previous.is_dir():  # a notebook not run yet (or its Output not attached): skip that dataset
+        print("WARNING: missing, skipped:", previous)
+        continue
     # dirs_exist_ok: several sessions (one per dataset) merge into one work folder
     shutil.copytree(previous, WORK, dirs_exist_ok=True, ignore=LIGHT if SESSION == "report" else None)
     print("merged", previous)
