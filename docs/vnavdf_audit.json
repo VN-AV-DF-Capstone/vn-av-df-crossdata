@@ -1,0 +1,319 @@
+{
+  "manifests": [
+    "vn-av-df-data-part1_trim04_fake/vn-av-df-data-part1/manifest.jsonl",
+    "vn-av-df-data-part2_fake/vn-av-df-data-part2/manifest.jsonl",
+    "vn-av-df-data-part3_fake/vn-av-df-data-part3/manifest.jsonl"
+  ],
+  "rows": 23242,
+  "splits": {
+    "files": {
+      "vn-av-df-data-part1": {
+        "train": 4234,
+        "validation": 1052,
+        "test": 2336
+      },
+      "vn-av-df-data-part2": {
+        "train": 4310,
+        "validation": 1070,
+        "test": 2392
+      },
+      "vn-av-df-data-part3": {
+        "train": 4314,
+        "validation": 894,
+        "test": 2640
+      }
+    },
+    "speakers": {
+      "train": 72,
+      "validation": 17,
+      "test": 31
+    }
+  },
+  "overlap": {
+    "speaker_id": {
+      "values": 120,
+      "shared": 0,
+      "by_pair": {},
+      "examples": {}
+    },
+    "source_id": {
+      "values": 164,
+      "shared": 0,
+      "by_pair": {},
+      "examples": {}
+    },
+    "source_clip_id": {
+      "values": 2400,
+      "shared": 0,
+      "by_pair": {},
+      "examples": {}
+    },
+    "sha256": {
+      "values": 23242,
+      "shared": 0,
+      "by_pair": {},
+      "examples": {}
+    },
+    "audio_source_id": {
+      "values": 164,
+      "shared": 0,
+      "by_pair": {},
+      "examples": {}
+    }
+  },
+  "donor_audio": {
+    "borrowed_audio_clips": 1734,
+    "crossing_splits": {}
+  },
+  "transcripts": {
+    "sentences": 2400,
+    "shared": 0,
+    "by_pair": {}
+  },
+  "test_reuse": {
+    "entries": 16,
+    "rounds": [
+      "v005_results",
+      "v006_results"
+    ],
+    "sessions": 2,
+    "checkpoints": 14,
+    "checkpoints_tested_more_than_once": 0,
+    "max_test_use": 1,
+    "per_model": {
+      "avh_align": 2,
+      "avh_align_plus": 2,
+      "avh_align_sup": 2,
+      "lipinc_v2": 2,
+      "speechforensics": 2,
+      "trihead_v5": 2,
+      "trihead_v5_no_pair": 2,
+      "xlsr_frozen": 2
+    },
+    "table": [
+      [
+        "v005_results",
+        "avh_align_plus_seed42",
+        "train-test-20261111-0910",
+        "2026-11-11 09:28:03",
+        1
+      ],
+      [
+        "v005_results",
+        "avh_align_seed42",
+        "train-test-20261111-0910",
+        "2026-11-11 09:33:42",
+        1
+      ],
+      [
+        "v005_results",
+        "avh_align_sup_seed42",
+        "train-test-20261111-0910",
+        "2026-11-11 09:39:27",
+        1
+      ],
+      [
+        "v005_results",
+        "lipinc_v2_seed42",
+        "train-test-20261111-0910",
+        "2026-11-11 09:45:17",
+        1
+      ],
+      [
+        "v005_results",
+        "speechforensics_seed42",
+        "train-test-20261111-0910",
+        "2026-11-11 09:51:01",
+        1
+      ],
+      [
+        "v005_results",
+        "trihead_v5_no_pair_seed42",
+        "train-test-20261111-0910",
+        "2026-11-11 10:10:08",
+        1
+      ],
+      [
+        "v005_results",
+        "trihead_v5_seed42",
+        "train-test-20261111-0910",
+        "2026-11-11 10:28:52",
+        1
+      ],
+      [
+        "v005_results",
+        "xlsr_frozen_seed42",
+        "train-test-20261111-0910",
+        "2026-11-11 10:35:48",
+        1
+      ],
+      [
+        "v006_results",
+        "avh_align_plus_seed43",
+        "train-test-20261114-0458",
+        "2026-11-14 05:16:38",
+        1
+      ],
+      [
+        "v006_results",
+        "avh_align_seed43",
+        "train-test-20261114-0458",
+        "2026-11-14 05:22:50",
+        1
+      ],
+      [
+        "v006_results",
+        "avh_align_sup_seed43",
+        "train-test-20261114-0458",
+        "2026-11-14 05:29:01",
+        1
+      ],
+      [
+        "v006_results",
+        "lipinc_v2_seed43",
+        "train-test-20261114-0458",
+        "2026-11-14 05:34:10",
+        1
+      ],
+      [
+        "v006_results",
+        "speechforensics_seed43",
+        "train-test-20261114-0458",
+        "2026-11-14 05:40:26",
+        1
+      ],
+      [
+        "v006_results",
+        "trihead_v5_no_pair_seed43",
+        "train-test-20261114-0458",
+        "2026-11-14 06:00:46",
+        1
+      ],
+      [
+        "v006_results",
+        "trihead_v5_seed43",
+        "train-test-20261114-0458",
+        "2026-11-14 06:20:48",
+        1
+      ],
+      [
+        "v006_results",
+        "xlsr_frozen_seed43",
+        "train-test-20261114-0458",
+        "2026-11-14 06:28:24",
+        1
+      ]
+    ]
+  },
+  "shortcuts": {
+    "vn-av-df-data-part1": {
+      "samples": 7622,
+      "overall": {
+        "lead_silence_s": 0.5176353195607392,
+        "trail_silence_s": 0.5157520236275696,
+        "silence_ratio": 0.5252017226761665,
+        "loudness_db": 0.5149642381191283,
+        "duration_s": 0.5137460590468856
+      },
+      "flagged_overall": {},
+      "most_extreme_cell": {
+        "lead_silence_s": {
+          "cell": "voice/full",
+          "auc": 0.6283890624999999
+        },
+        "trail_silence_s": {
+          "cell": "voice/full",
+          "auc": 0.5761695312499999
+        },
+        "silence_ratio": {
+          "cell": "voice/full",
+          "auc": 0.67526796875
+        },
+        "loudness_db": {
+          "cell": "voice/full",
+          "auc": 0.5356734375000001
+        },
+        "duration_s": {
+          "cell": "source/full",
+          "auc": 0.5252124587458745
+        }
+      }
+    },
+    "vn-av-df-data-part2": {
+      "samples": 7772,
+      "overall": {
+        "lead_silence_s": 0.5190006825515017,
+        "trail_silence_s": 0.4787754017746339,
+        "silence_ratio": 0.47185456223628686,
+        "loudness_db": 0.5108693999751799,
+        "duration_s": 0.5056119694713329
+      },
+      "flagged_overall": {},
+      "most_extreme_cell": {
+        "lead_silence_s": {
+          "cell": "voice/full",
+          "auc": 0.6853101562499999
+        },
+        "trail_silence_s": {
+          "cell": "voice/full",
+          "auc": 0.3902015625
+        },
+        "silence_ratio": {
+          "cell": "voice/partial",
+          "auc": 0.438591875
+        },
+        "loudness_db": {
+          "cell": "voice/full",
+          "auc": 0.5688312500000001
+        },
+        "duration_s": {
+          "cell": "source/full",
+          "auc": 0.5119137353433836
+        }
+      }
+    },
+    "vn-av-df-data-part3": {
+      "samples": 7848,
+      "overall": {
+        "lead_silence_s": 0.5215739415874084,
+        "trail_silence_s": 0.4822010314405735,
+        "silence_ratio": 0.4886176553856042,
+        "loudness_db": 0.5042392360606316,
+        "duration_s": 0.5018575494869578
+      },
+      "flagged_overall": {},
+      "most_extreme_cell": {
+        "lead_silence_s": {
+          "cell": "voice/full",
+          "auc": 0.6841171875000001
+        },
+        "trail_silence_s": {
+          "cell": "voice/full",
+          "auc": 0.33894140625
+        },
+        "silence_ratio": {
+          "cell": "donor/full",
+          "auc": 0.538769595709571
+        },
+        "loudness_db": {
+          "cell": "voice/full",
+          "auc": 0.574690625
+        },
+        "duration_s": {
+          "cell": "donor/full",
+          "auc": 0.509338902640264
+        }
+      }
+    }
+  },
+  "duration_auc": {
+    "train": 0.5045693324450843,
+    "validation": 0.505226119332195,
+    "test": 0.5045924448358426
+  },
+  "verdict": {
+    "identity_or_source_leak": [],
+    "donor_audio_crossing": 0,
+    "repeated_test_use": 0
+  }
+}

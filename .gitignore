@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+*.egg-info/
+wandb/
+# never commit data, clips, features or scores of real people
+work/
+crossdata/
+*.mp4
+*.npz

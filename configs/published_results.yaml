@@ -1,0 +1,50 @@
+# Numbers reported by the original papers. They are context only: protocols, test subsets and
+# preprocessing differ from ours, so the report keeps them in a separate table and never ranks
+# them against our zero-shot numbers. Every value is copied verbatim from the cited table.
+
+- key: avh_align_table2
+  source: "Smeu et al., Circumventing shortcuts in audio-visual deepfake detection datasets with unsupervised learning, CVPR 2025 (arXiv 2412.00175v3), Table 2"
+  metric: "AUC (%)"
+  protocol: "FakeAVCeleb: 30% test split. AV-Deepfake1M: 10k samples of the validation split. trim = leading silence removed (tau = 5e-4)."
+  columns: [fakeavceleb, fakeavceleb_trim, avdeepfake1m, avdeepfake1m_trim]
+  rows:
+    - {method: "AVH-Align/sup", train: "FakeAVCeleb", fakeavceleb: 99.2, fakeavceleb_trim: 99.2, avdeepfake1m: 69.0, avdeepfake1m_trim: 63.6}
+    - {method: "AVH-Align/sup", train: "AV-Deepfake1M", fakeavceleb: 77.5, fakeavceleb_trim: 70.8, avdeepfake1m: 100.0, avdeepfake1m_trim: 83.1}
+    - {method: "AVAD", train: "LRS (unsupervised)", fakeavceleb: 84.5, fakeavceleb_trim: 84.7, avdeepfake1m: 54.3, avdeepfake1m_trim: 54.3}
+    - {method: "SpeechForensics", train: "VoxCeleb2 (unsupervised)", fakeavceleb: 98.8, fakeavceleb_trim: 98.8, avdeepfake1m: 68.8, avdeepfake1m_trim: 68.2}
+    - {method: "AVH-Align", train: "VoxCeleb2 (unsupervised)", fakeavceleb: 94.6, fakeavceleb_trim: 94.6, avdeepfake1m: 85.9, avdeepfake1m_trim: 83.5}
+
+- key: avh_align_table1
+  source: "Smeu et al., CVPR 2025 (arXiv 2412.00175v3), Table 1"
+  metric: "AUC (%)"
+  protocol: "RVRA vs FVFA subsets of FakeAVCeleb; AV-Deepfake1M. Shows the leading-silence shortcut."
+  columns: [fakeavceleb, fakeavceleb_trim, avdeepfake1m, avdeepfake1m_trim]
+  rows:
+    - {method: "Silence classifier", train: "per dataset", fakeavceleb: 98.4, fakeavceleb_trim: 54.8, avdeepfake1m: 98.2, avdeepfake1m_trim: 50.6}
+
+- key: mavosdd_table3
+  source: "Croitoru et al., MAVOS-DD: Multilingual Audio-Video Open-Set Deepfake Detection Benchmark (arXiv 2505.11109v1), Table 3"
+  metric: "AUC (0-1)"
+  protocol: "MAVOS-DD test splits. pre-trained = original weights; fine-tuned = trained on the MAVOS-DD train split."
+  columns: [in_domain, open_model, open_language, open_full]
+  rows:
+    - {method: "AVFF (pre-trained)", train: "original", in_domain: 0.51, open_model: 0.50, open_language: 0.51, open_full: 0.50}
+    - {method: "MRDF (pre-trained)", train: "original", in_domain: 0.46, open_model: 0.52, open_language: 0.41, open_full: 0.49}
+    - {method: "TALL (pre-trained)", train: "original", in_domain: 0.48, open_model: 0.51, open_language: 0.47, open_full: 0.49}
+    - {method: "AVFF (fine-tuned)", train: "MAVOS-DD", in_domain: 0.95, open_model: 0.89, open_language: 0.90, open_full: 0.89}
+    - {method: "MRDF (fine-tuned)", train: "MAVOS-DD", in_domain: 0.90, open_model: 0.88, open_language: 0.88, open_full: 0.86}
+    - {method: "TALL (fine-tuned)", train: "MAVOS-DD", in_domain: 0.86, open_model: 0.84, open_language: 0.80, open_full: 0.79}
+
+- key: polyglotfake_table5
+  source: "Hou et al., PolyGlotFake: A Novel Multilingual and Multimodal DeepFake Dataset (arXiv 2405.08838v1), Table 5"
+  metric: "AUC (0-1)"
+  protocol: "Trained on FakeAVCeleb; tested on FakeAVCeleb (intra-dataset), DFDC and PolyGlotFake (cross-dataset)."
+  columns: [fakeavceleb, dfdc, polyglotfake]
+  rows:
+    - {method: "Xception", train: "FakeAVCeleb", fakeavceleb: 0.9169, dfdc: 0.6530, polyglotfake: 0.6052}
+    - {method: "EfficientNet-B4", train: "FakeAVCeleb", fakeavceleb: 0.9023, dfdc: 0.6020, polyglotfake: 0.5769}
+    - {method: "CORE", train: "FakeAVCeleb", fakeavceleb: 0.9345, dfdc: 0.6625, polyglotfake: 0.6220}
+    - {method: "RECCE", train: "FakeAVCeleb", fakeavceleb: 0.9396, dfdc: 0.6884, polyglotfake: 0.6596}
+    - {method: "DSP-FWA", train: "FakeAVCeleb", fakeavceleb: 0.9115, dfdc: 0.6929, polyglotfake: 0.6658}
+    - {method: "F3Net", train: "FakeAVCeleb", fakeavceleb: 0.9416, dfdc: 0.6452, polyglotfake: 0.6439}
+    - {method: "XRes (Xception video + ResNet audio)", train: "FakeAVCeleb", fakeavceleb: 0.9556, dfdc: 0.7042, polyglotfake: 0.6835}

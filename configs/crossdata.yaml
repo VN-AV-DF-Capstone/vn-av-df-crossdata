@@ -1,0 +1,66 @@
+# Cross-dataset evaluation of the VN-AV-DF detectors (M3-R, M2, baselines) and of published
+# detectors with their released weights. Every path below can be overridden from the notebook.
+#
+# Datasets are gated: request access from the authors, then attach them to the Kaggle notebook
+# (upload as a private Kaggle dataset; never redistribute). Keys that are missing or whose root
+# does not exist are skipped.
+
+project: vn-av-df-crossdata        # W&B project (private), one run per step and dataset
+entity: vn-av-df-capstone
+seed: 2026                         # sampling, bootstrap and calibration split
+
+work: /kaggle/working/crossdata    # manifests, normalized clips, feature cache, scores, results
+
+datasets:
+  # Public Kaggle mirrors (checked 28/11/2026: folders, metadata files, labels); attach them as inputs.
+  # The original terms still apply (research / non-commercial use, no redistribution of the data).
+  vnavdf:                          # pipeline check only, OFF by default: the VN-AV-DF test split was already
+    root: null                     # used once per checkpoint; the 27/11 smoke run (24 videos) reproduced its AUC
+    split: test
+    sample: {per_stratum: 100, strata: [category], max_per_subject: 0}
+  fakeavceleb:                     # Khalid et al., NeurIPS 2021 D&B; mirror aicontentdetections/fakeavceleb-v1-2 (21,566 videos)
+    root: /kaggle/input/datasets/aicontentdetections/fakeavceleb-v1-2/FakeAVCeleb_v1.2
+    sample: {per_stratum: 500, strata: [category], max_per_subject: 0}
+  avdeepfake1m:                    # Cai et al., ACM MM 2024; mirror aicontentdetections/av-deepfake1m, val = 57,340 videos in 20 zip volumes
+    root: /kaggle/input/datasets/aicontentdetections/av-deepfake1m/av-deepfake1m
+    split: val
+    sample: {per_stratum: 500, strata: [category], max_per_subject: 0}
+  lavdf:                           # Cai et al., DICTA 2022; mirror elin75/localized-audio-visual-deepfake-dataset-lav-df, test = 26,100 videos
+    root: /kaggle/input/datasets/elin75/localized-audio-visual-deepfake-dataset-lav-df/LAV-DF
+    split: test
+    sample: {per_stratum: 500, strata: [category], max_per_subject: 0}
+  polyglotfake:                    # Hou et al., arXiv 2405.08838; mirror debajyatidey/polyglotfake (762 real, 14,472 fake, 7 languages)
+    root: /kaggle/input/datasets/debajyatidey/polyglotfake/PolyGlotFake
+    sample: {per_stratum: 100, strata: [category, language], max_per_subject: 0}
+  mavosdd:                         # Croitoru et al., 2025; HF gated (unibuc-cs/MAVOS-DD), no Kaggle copy: set a root after downloading
+    root: null
+    subsets: [in_domain, open_model, open_language]
+    sample: {per_stratum: 60, strata: [subset, label, method, language], max_per_subject: 0}
+  folder:                          # any extra set laid out as <root>/real/*.mp4 and <root>/fake/*.mp4
+    root: null
+    sample: {per_stratum: 1000, strata: [category], max_per_subject: 0}
+
+models:
+  # Our checkpoints: folders <run>/<model>_seed<seed>/best.pt + metrics.json (training/02_train.py).
+  # Kaggle dataset linhxm/vn-av-df-weights-2seeds (tools/export_weights.py): seed 42 (v005) + seed 43 (v006).
+  runs:
+    - /kaggle/input/datasets/linhxm/vn-av-df-weights-2seeds
+  # trihead_v5_no_pair = M3-R re-trained without the clean <-> re-encoded pairing (retrained ablation, gate R6).
+  # lipinc_v2 (BL-V, visual only) is packed too; add it here to also extract the LIPINC frames (CPU).
+  ours: [trihead_v5, trihead_v5_no_pair, avh_align_plus, avh_align_sup, xlsr_frozen, avh_align, speechforensics, bl_ens_av]
+  # Published detectors run with the authors' weights (no VN-AV-DF training):
+  # - avh_align_official: AVH-Align, released checkpoint trained on 45k AV-Deepfake1M real videos
+  # - speechforensics is training-free, so the VN-AV-DF copy above is already the published method
+  published: [avh_align_official]
+  reference: trihead_v5            # paired bootstrap deltas are reported against this model
+
+protocols:
+  window: 175                      # 7 s at 25 fps, half overlap (the demo and training windows)
+  stride: 88
+  resolution_gate: [true, false]   # M3-R ships with a 360p gate; report both settings
+  trim_leading_silence: true       # AVH-Align shortcut check (tau = 5e-4, rounded to 1 / fps)
+  silence_tau: 0.0005
+  knockout: [trace, sync_rel, sync_abs, phi, audio]   # M3-R test-time branch ablation
+  calibration_fraction: 0.3        # subject-disjoint share used to re-fit thresholds on the target
+  fpr_targets: [0.01, 0.05]
+  bootstrap: 1000

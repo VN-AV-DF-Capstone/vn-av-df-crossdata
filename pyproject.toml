@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vn-av-df-crossdata"
+version = "0.1.0"
+description = "Cross-dataset evaluation of the VN-AV-DF audio-visual deepfake detectors"
+requires-python = ">=3.10"
+# vn-av-df-forensics (encoders, models, checkpoints loader) is installed from its own checkout:
+#   pip install -e <vn-av-df-forensics>[data]
+dependencies = [
+    "numpy",
+    "scikit-learn",
+    "matplotlib",
+    "pyyaml",
+]
+
+[project.optional-dependencies]
+mavos = ["datasets"]
+wandb = ["wandb"]
+test = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 120
