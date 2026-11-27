@@ -92,9 +92,11 @@ def main():
     parser.add_argument("--owner", default="linhxm")
     parser.add_argument("--prefix", default="vn-av-df-crossdata")
     parser.add_argument("--only", nargs="*", choices=["cpu", "gpu", "report", "audit"])
+    parser.add_argument("--names", nargs="*", help="only these notebook slugs (e.g. vn-av-df-crossdata-lavdf-cpu)")
     parser.add_argument("--dry-run", action="store_true")
     args = parser.parse_args()
-    specs = [s for s in plan(args.owner, args.prefix) if not args.only or s["kind"] in args.only]
+    specs = [s for s in plan(args.owner, args.prefix)
+             if (not args.only or s["kind"] in args.only) and (not args.names or s["slug"] in args.names)]
     order = {"cpu": 0, "audit": 0, "gpu": 1, "report": 2}
     specs.sort(key=lambda s: order[s["kind"]])
     api = None

@@ -11,7 +11,7 @@ This repository answers three review questions on the VN-AV-DF method paper:
 | Is the repeated test set leaking? | split-overlap audit (speaker, source video, clip, hash, donor audio, sentence), test-use log, single-feature shortcut AUCs; leading-silence trimming on external sets | `audit.md`, Section 7 |
 | Stronger ablation | test-time branch knockout of the trained M3-R (trace, sync relative / absolute, AVH-Align phi channel, audio) on every dataset, plus the resolution gate on / off | Sections 8-9 |
 
-The detectors, encoders and checkpoint loader come from [vn-av-df-forensics](https://github.com/linhxm/vn-av-df-forensics) (installed next to this repository). Nothing is re-implemented: features are extracted with the same AV-HuBERT / XLS-R / mouth-crop encoders and loaded with the same `BenchData`, so a score here is the score the trained model gives.
+The detectors, encoders and checkpoint loader come from [vn-av-df-forensics](https://github.com/VN-AV-DF-Capstone/vn-av-df-forensics) (installed next to this repository). Nothing is re-implemented: features are extracted with the same AV-HuBERT / XLS-R / mouth-crop encoders and loaded with the same `BenchData`, so a score here is the score the trained model gives.
 
 ## Protocols
 

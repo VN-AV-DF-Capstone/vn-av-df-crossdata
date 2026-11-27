@@ -41,7 +41,7 @@ SETUP = """
 from pathlib import Path
 import subprocess, sys, os, time, json, shutil
 SESSION_START = time.time()
-MAIN_URL = "https://github.com/linhxm/vn-av-df-forensics.git"
+MAIN_URL = "https://github.com/VN-AV-DF-Capstone/vn-av-df-forensics.git"
 MAIN = Path("/kaggle/working/vn-av-df-forensics")
 # Repo này (public trên GitHub); clone lỗi thì dùng bản upload thành Kaggle dataset (nếu có attach).
 CROSS_URL = "https://github.com/VN-AV-DF-Capstone/vn-av-df-crossdata.git"
