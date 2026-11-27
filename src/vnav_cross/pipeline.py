@@ -15,7 +15,7 @@ import json
 import os
 import sys
 import time
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 
 import yaml
@@ -138,8 +138,12 @@ def step_prepare(cross, only=None, workers=None):
         run = open_run(cross, "prepare", f"prepare-{name}", group=name, config={"dataset": name, "tau": tau})
         print(f"{name}: normalizing {len(todo)} videos ({len(done)} already done)", flush=True)
         infos, failed = [], 0
+        # One child process per video (media.prepare_isolated): no PyAV deadlock between threads, and
+        # progress counts finished videos (as_completed), so one slow video cannot freeze the log.
         with ThreadPoolExecutor(max_workers=workers or os.cpu_count() or 2) as pool:
-            for n, info in enumerate(pool.map(lambda r: media.prepare(r, clips, tau), todo), 1):
+            futures = [pool.submit(media.prepare_isolated, r, clips, tau) for r in todo]
+            for n, future in enumerate(as_completed(futures), 1):
+                info = future.result()
                 infos.append(info)
                 failed += "error" in info
                 if n % 25 == 0 or n == len(todo):

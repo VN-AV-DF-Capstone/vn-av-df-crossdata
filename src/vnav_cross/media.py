@@ -57,3 +57,29 @@ def prepare(row, clips, tau=5e-4):
         if raw is not None:
             Path(raw).unlink(missing_ok=True)
     return info
+
+
+def prepare_isolated(row, clips, tau=5e-4, timeout=300):
+    """media.prepare in a child process: PyAV decoding from several threads of one process can
+    deadlock (FakeAVCeleb run, 28/11: progress stopped after ~50 videos while each video alone took
+    < 1 s), and a stuck video is killed after `timeout` seconds instead of blocking the session."""
+    import json
+    import subprocess
+    import sys
+
+    try:
+        out = subprocess.run([sys.executable, "-m", "vnav_cross.media", json.dumps(row), str(clips), str(tau)],
+                             capture_output=True, text=True, timeout=timeout)
+    except subprocess.TimeoutExpired:
+        return {"sample_id": row["sample_id"], "error": f"timeout after {timeout} s"}
+    lines = out.stdout.strip().splitlines()
+    if out.returncode or not lines:
+        return {"sample_id": row["sample_id"], "error": f"worker exit {out.returncode}: {out.stderr[-300:]}"}
+    return json.loads(lines[-1])
+
+
+if __name__ == "__main__":
+    import json
+    import sys
+
+    print(json.dumps(prepare(json.loads(sys.argv[1]), sys.argv[2], float(sys.argv[3]))))
