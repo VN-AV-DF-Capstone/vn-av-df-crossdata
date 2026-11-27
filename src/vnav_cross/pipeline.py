@@ -134,13 +134,23 @@ def step_prepare(cross, only=None, workers=None):
         clips = folder(cross, name) / "clips"
         clips.mkdir(parents=True, exist_ok=True)
         tick = time.time()
+        # Run opened first: progress is visible (log + W&B) during the long normalization.
+        run = open_run(cross, "prepare", f"prepare-{name}", group=name, config={"dataset": name, "tau": tau})
+        print(f"{name}: normalizing {len(todo)} videos ({len(done)} already done)", flush=True)
+        infos, failed = [], 0
         with ThreadPoolExecutor(max_workers=workers or os.cpu_count() or 2) as pool:
-            infos = list(pool.map(lambda r: media.prepare(r, clips, tau), todo))
+            for n, info in enumerate(pool.map(lambda r: media.prepare(r, clips, tau), todo), 1):
+                infos.append(info)
+                failed += "error" in info
+                if n % 25 == 0 or n == len(todo):
+                    spent = time.time() - tick
+                    left = spent / n * (len(todo) - n)
+                    print(f"  {name} prepare {n}/{len(todo)}, {failed} errors, {spent / 60:.1f} min, ~{left / 60:.0f} min left", flush=True)
+                    run.log({"prepare/done": n, "prepare/errors": failed, "prepare/videos_per_min": n / max(spent, 1e-6) * 60})
         merged = {**done, **{i["sample_id"]: i for i in infos}}
         write_jsonl(folder(cross, name) / "media.jsonl", [merged[r["sample_id"]] for r in rows if r["sample_id"] in merged])
         errors = [i for i in infos if "error" in i]
         print(f"{name}: {len(todo)} normalized in {(time.time() - tick) / 60:.1f} min, {len(errors)} errors", flush=True)
-        run = open_run(cross, "prepare", f"prepare-{name}", group=name, config={"dataset": name, "tau": tau})
         run.summary({"normalized": len(merged) - len(errors), "errors": len(errors)})
         run.table("prepare/errors", ["sample_id", "error"], [[e["sample_id"], e["error"]] for e in errors[:500]])
         ok = [m for m in merged.values() if "error" not in m]

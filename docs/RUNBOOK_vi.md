@@ -9,7 +9,7 @@ Cả 4 tập đều có sẵn trên Kaggle; chỉ cần Add Input, không phải
 | `fakeavceleb` | FakeAVCeleb v1.2: 500 real, 21.066 fake, tiếng Anh | `aicontentdetections/fakeavceleb-v1-2` | 500 / lớp × 4 (RVRA, FVRA, RVFA, FVFA) | face swap (FaceSwap, FSGAN), Wav2Lip, giọng clone SV2TTS | crop mặt VoxCeleb2 |
 | `avdeepfake1m` | AV-Deepfake1M **val**: 57.340 video (test không công bố nhãn) | `aicontentdetections/av-deepfake1m` | 500 / lớp × 4 (real, visual, audio, both) | sửa vài từ: TalkLip + VITS / YourTTS | 224 × 224 |
 | `lavdf` | LAV-DF **test**: 26.100 video | `elin75/localized-audio-visual-deepfake-dataset-lav-df` | 500 / lớp × 4 | sửa vài từ, hình và / hoặc tiếng | 224 × 224 |
-| `polyglotfake` | PolyGlotFake: 762 real, 14.472 fake, 7 ngôn ngữ | `debajyatidey/polyglotfake` | 100 / (lớp × ngôn ngữ) | dịch + clone giọng (XTTS, Bark, MicroTTS, Vall-E-X, Tacotron) + lip-sync (VideoRetalking, Wav2Lip) | 720p |
+| `polyglotfake` | PolyGlotFake: 762 real, 13.605 fake có trong bản Kaggle (JSON gốc liệt kê 14.472), 7 ngôn ngữ | `debajyatidey/polyglotfake` | 100 / (lớp × ngôn ngữ) | dịch + clone giọng (XTTS, Bark, MicroTTS, Vall-E-X, Tacotron) + lip-sync (VideoRetalking, Wav2Lip) | 720p |
 
 Ghi chú:
 - AV-Deepfake1M trên Kaggle để val dưới dạng 20 file zip 1 GB. `archive.py` đọc thẳng các phần zip và chỉ trích video được lấy mẫu, không giải nén cả bộ.

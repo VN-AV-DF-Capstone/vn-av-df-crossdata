@@ -76,8 +76,12 @@ def extract(cfg, rows, clips, encoders, devices=(None,), run=None, log_every=25)
                 available.put(encoder)
             with guard:
                 done[0] += 1
-                if run is not None and (done[0] % log_every == 0 or done[0] == len(todo)):
+                if done[0] % log_every == 0 or done[0] == len(todo):
                     spent = time.perf_counter() - began
+                    left = spent / done[0] * (len(todo) - done[0])
+                    print(f"  {name} {done[0]}/{len(todo)}, {len(failed)} failed, {spent / 60:.1f} min, "
+                          f"~{left / 60:.0f} min left", flush=True)
+                if run is not None and (done[0] % log_every == 0 or done[0] == len(todo)):
                     run.log({f"extract/{name}/done": done[0],
                              f"extract/{name}/samples_per_min": done[0] / max(spent, 1e-6) * 60,
                              f"extract/{name}/failed": len(failed)})

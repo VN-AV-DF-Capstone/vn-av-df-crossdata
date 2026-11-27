@@ -39,7 +39,7 @@ Public Kaggle mirrors, checked on 28/11/2026 (folders, label files, a sample vid
 | `fakeavceleb` | FakeAVCeleb v1.2 (Khalid et al., NeurIPS 2021 D&B): 500 real, 21,066 fake | `aicontentdetections/fakeavceleb-v1-2` | 500 per class (RVRA, FVRA, RVFA, FVFA) | FaceSwap, FSGAN, Wav2Lip, SV2TTS voice cloning | AI?, visual, audio |
 | `avdeepfake1m` | AV-Deepfake1M validation split (Cai et al., ACM MM 2024): 57,340 videos | `aicontentdetections/av-deepfake1m` (val in 20 zip volumes, read in place by `archive.py`) | 500 per class | word-level edits, visual / audio / both | AI?, visual, audio |
 | `lavdf` | LAV-DF test split (Cai et al., DICTA 2022): 26,100 videos | `elin75/localized-audio-visual-deepfake-dataset-lav-df` | 500 per class | word-level edits, visual / audio / both | AI?, visual, audio |
-| `polyglotfake` | PolyGlotFake (Hou et al., arXiv 2405.08838): 762 real, 14,472 fake, 7 languages | `debajyatidey/polyglotfake` | 100 per class x language | translated cloned voice (XTTS, Bark, MicroTTS, Vall-E-X, Tacotron) + lip-sync (VideoRetalking, Wav2Lip) | AI?, visual, audio |
+| `polyglotfake` | PolyGlotFake (Hou et al., arXiv 2405.08838): 762 real, 13,605 fake files in the Kaggle mirror (the json lists 14,472), 7 languages | `debajyatidey/polyglotfake` | 100 per class x language | translated cloned voice (XTTS, Bark, MicroTTS, Vall-E-X, Tacotron) + lip-sync (VideoRetalking, Wav2Lip) | AI?, visual, audio |
 | `mavosdd` | MAVOS-DD test (Croitoru et al., 2025) | none (HF gated, 308 GB) | 60 per cell | talking head, face swap, lip-sync; real audio | AI?, visual |
 | `folder` | any `<root>/real/**`, `<root>/fake/**` | yours | 1000 per class | unknown | AI? |
 
