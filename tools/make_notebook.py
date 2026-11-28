@@ -155,7 +155,13 @@ for previous in map(Path, PREVIOUS_WORK if isinstance(PREVIOUS_WORK, (list, tupl
         continue
     previous = found
     # dirs_exist_ok: several sessions (one per dataset) merge into one work folder
-    shutil.copytree(previous, WORK, dirs_exist_ok=True, ignore=LIGHT if SESSION == "report" else None)
+    ignore = LIGHT if SESSION == "report" else shutil.ignore_patterns("clips") if SESSION == "gpu" else None
+    shutil.copytree(previous, WORK, dirs_exist_ok=True, ignore=ignore)
+    if SESSION == "gpu":  # clips are only read here: link them rather than write the videos again
+        for clips in previous.glob("*/clips"):
+            link = WORK / clips.parent.name / "clips"
+            if not link.exists():
+                link.symlink_to(clips, target_is_directory=True)
     print("merged", previous)
 GPU = torch.cuda.is_available()
 if SESSION == "gpu" and not GPU:
