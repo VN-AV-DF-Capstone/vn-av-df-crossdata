@@ -135,10 +135,25 @@ for name, root in DATASETS.items():
 cross["models"]["runs"] = RUNS
 cross["wandb"] = {"mode": "online"} if USE_WANDB else None
 LIGHT = shutil.ignore_patterns("cache", "clips", "raw", "figures", "tables")
+def locate(previous):
+    # Kaggle does not always mount an input where its name says (28/11: a dataset made from a local
+    # run was not at /kaggle/input/datasets/<owner>/<slug>): fall back to the folder, anywhere under
+    # /kaggle/input, that holds <dataset>/manifest.jsonl inside a path naming the same input.
+    if previous.is_dir():
+        return previous
+    hits = sorted({m.parent.parent for m in Path("/kaggle/input").glob("**/manifest.jsonl") if previous.name in str(m)})
+    if hits:
+        print(f"{previous} not found, using {hits[0]}")
+    return hits[0] if hits else None
+
+
+print("inputs:", sorted(str(p) for p in Path("/kaggle/input").glob("*/*/*")))
 for previous in map(Path, PREVIOUS_WORK if isinstance(PREVIOUS_WORK, (list, tuple)) else [PREVIOUS_WORK] if PREVIOUS_WORK else []):
-    if not previous.is_dir():  # a notebook not run yet (or its Output not attached): skip that dataset
+    found = locate(previous)
+    if found is None:  # a notebook not run yet (or its Output not attached): skip that dataset
         print("WARNING: missing, skipped:", previous)
         continue
+    previous = found
     # dirs_exist_ok: several sessions (one per dataset) merge into one work folder
     shutil.copytree(previous, WORK, dirs_exist_ok=True, ignore=LIGHT if SESSION == "report" else None)
     print("merged", previous)
@@ -147,6 +162,10 @@ if SESSION == "gpu" and not GPU:
     raise RuntimeError('SESSION = "gpu" cần Accelerator T4 ×2')
 if SESSION in ("cpu", "report", "audit") and GPU:
     print(f"WARNING: SESSION {SESSION} only needs CPU; choose Accelerator None to save GPU quota")
+if SESSION == "gpu":  # stop before spending GPU time when the CPU-session work did not arrive
+    lost = [n for n in pipeline.active_datasets(cross, ONLY) if not (WORK / n / "media.jsonl").is_file()]
+    if lost:
+        raise RuntimeError(f"no CPU-session work (media.jsonl) for {lost} in {WORK}: check PREVIOUS_WORK / inputs")
 print("datasets found:", list(pipeline.active_datasets(cross, ONLY)))
 """
 
