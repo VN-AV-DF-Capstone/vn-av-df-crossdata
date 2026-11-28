@@ -49,10 +49,24 @@ CROSS_DATASET = Path("/kaggle/input/datasets/linhxm/vn-av-df-crossdata-code")
 CROSS = Path("/kaggle/working/vn-av-df-crossdata")
 WORKERS = Path("/kaggle/temp/vn-av-df-workers")
 LOGS = Path("/kaggle/temp/vn-av-df-logs"); LOGS.mkdir(parents=True, exist_ok=True)
-def logged(name, command, **kw):
+def logged(name, command, heartbeat=60, limit=1800, **kw):
+    # Setup command into its own log file; every `heartbeat` s print its last log line (a long install
+    # is never silent), and stop it after `limit` s instead of hanging the session.
     path = LOGS / f"{name}.log"
+    start = time.time()
     with open(path, "a", encoding="utf-8") as log:
-        code = subprocess.run(list(map(str, command)), stdout=log, stderr=subprocess.STDOUT, **kw).returncode
+        proc = subprocess.Popen(list(map(str, command)), stdout=log, stderr=subprocess.STDOUT, **kw)
+        while True:
+            try:
+                code = proc.wait(timeout=heartbeat)
+                break
+            except subprocess.TimeoutExpired:
+                tail = path.read_text(encoding="utf-8", errors="replace").strip().splitlines()[-1:] or [""]
+                print(f"[{name}] {time.time() - start:.0f} s: {tail[0][:160]}", flush=True)
+                if time.time() - start > limit:
+                    proc.kill()
+                    code = -9
+                    break
     if code:
         print("\\n".join(path.read_text(encoding="utf-8", errors="replace").splitlines()[-60:]))
         raise RuntimeError(f"{name} failed ({code}); log: {path}")
